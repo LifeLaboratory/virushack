@@ -4,7 +4,7 @@ from app.api.base import base_name as names
 
 def get_contacts(user_data):
     """
-    Авторизация пользователя
+    Получение контактов
     :param user_data:
     :return:
     """
@@ -19,4 +19,17 @@ def get_contacts(user_data):
             answer = provider.get_contacts_by_id_user(user_data)
         else:
             answer = provider.get_contacts(user_data)
+    return answer
+
+
+def post_contact(user_data):
+    """
+    Занести запись контакта
+    :param user_data:
+    :return:
+    """
+    if user_data.get(names.ID_CONTACT):
+        answer = Provider.change_contact(user_data)
+    else:
+        answer = Provider.post_contact(user_data)
     return answer

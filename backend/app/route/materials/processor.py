@@ -4,7 +4,7 @@ from app.api.base import base_name as names
 
 def get_materials(user_data):
     """
-    Авторизация пользователя
+    Получение материалов
     :param user_data:
     :return:
     """

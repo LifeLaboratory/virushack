@@ -39,6 +39,8 @@ ID_CV = "id_cv"
 ID_PROJECT = "id_project"
 ID_LESSON = "id_lesson"
 ID_NOM = "id_nom"
+ID_CONTACT = 'id_contact'
+ADRESS = 'adress'
 ID_SALES = "id_sales"
 ID_DOCUMENT = "id_document"
 IS_LIKE = 'is_like'
@@ -64,7 +66,9 @@ PAGE = "page"
 ID_NEWS = "id_news"
 RATE = "rate"
 LINK = "link"
-
+DATEBEGIN = 'datebegin'
+ID_PROCEDURE = 'id_procedure'
+DATEEND = 'dateend'
 ERROR_EXECUTE_DATABASE = "Fatal error: execute database"
 ERROR_CONNECT_DATABASE = "Error connect database"
 
@@ -107,7 +111,7 @@ exiration_date_residence = 'ВидЖительстваСрокДействия'
 code_activity = 'КодДеятельности'
 code_another_activity = 'КодДопДеятельности'
 get_answer = 'СпособОтвета'
-tel_number = 'НомерТел'
+tel = 'tel'
 email = 'email'
 POSITION = 'position'
 attestor = 'Свидетель'
@@ -146,42 +150,6 @@ bool = [post_deleted, post_draft]
 date_time_fields = [date_time]
 face_id = "@user"
 
-print_form_fields = [
-    INN,
-    BIRTHDAY,
-    PLACE_BIRTHDAY,
-    country_code,
-    post_code,
-    subject_code_rf,
-    area,
-    name_area,
-    city,
-    name_city,
-    locality,
-    locality_name,
-    street,
-    street_name ,
-    house,
-    house_number,
-    corps,
-    corps_number,
-    room_number,
-    type_doc,
-    passport,
-    date_passport,
-    issued_passport,
-    code_division,
-    residence,
-    number_doc_residence,
-    date_residence,
-    issued_residence,
-    exiration_date_residence,
-    code_activity,
-    code_another_activity,
-    get_answer,
-    tel_number,
-    email
-]
 
 CORS_HEADERS = {'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': '*',

@@ -4,7 +4,7 @@ from app.api.base import base_name as names
 
 class Provider:
     """
-    Класс для работы с материалами в бж
+    Класс для работы с материалами в бд
     """
     @staticmethod
     def get_materials(args):
