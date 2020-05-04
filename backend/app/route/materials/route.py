@@ -10,7 +10,7 @@ class Materials(BaseRouter):
     """
     def __init__(self):
         super().__init__()
-        self.args = [names.ID_USER, names.ID_DIAGNOSIS, names.SEARCH]
+        self.args = [names.ID_USER, names.ID_DIAGNOSIS, names.SEARCH, names.LAW_MATERIALS]
 
     def get(self):
         self._read_args()

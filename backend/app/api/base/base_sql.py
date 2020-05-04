@@ -99,6 +99,8 @@ class Sql:
                 for alert in alert_items:
                     if alert in v:
                         args[k] = args[k].replace(alert, '')
+            if v is None:
+                args[k] = 'NULL'
         query = query.format(**args)
         print(query)
         return Sql._exec(query)

@@ -14,8 +14,15 @@ def get_materials(user_data):
         if user_data.get(names.ID_DIAGNOSIS):
             user_data[names.FILTER_DIAGNOSIS] = f'and {names.ID_DIAGNOSIS} = {user_data.get(names.ID_DIAGNOSIS)}'
         answer = provider.search_materials(user_data)
+    elif user_data.get(names.LAW_MATERIALS):
+        answer = provider.get_law_materials(user_data)
+    elif user_data.get(names.ID_DIAGNOSIS) is None:
+        result = provider.get_diagnosis_by_id_user(user_data)
+        test_fields = [names.EAT, names.DYSPHAGIA, names.WASH, names.ID_USER, names.RESTROOM, names.DRESS,
+                       names.WASH_TEETH, names.ID_DIAGNOSIS]
+        for field in test_fields:
+            user_data[field] = result.get(field)
+        answer = provider.get_diagnosis_by_user(user_data)
     else:
-        if user_data.get(names.ID_DIAGNOSIS) is None:
-            user_data[names.ID_DIAGNOSIS] = provider.get_diagnosis_by_id_user(user_data)
         answer = provider.get_materials(user_data)
     return answer
