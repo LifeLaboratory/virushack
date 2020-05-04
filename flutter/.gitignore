@@ -1,1 +1,4 @@
+/.dart_tool/
 /.idea/
+
+*.g.dart
