@@ -42,7 +42,3 @@ async def on_get_info(sid, data):
         'event': 'get_info',
         'body': room.get_info(**params)
     })
-
-@sio.on('test')
-async def on_test(sid, data):
-    await sio.send(room.test())
