@@ -1,4 +1,6 @@
-from app.route.user.route import Auth
+from app.route.materials.route import Materials
+from app.route.contacts.route import Contacts
 ROUTES = {
-    '/api/auth': Auth
+    '/api/materials': Materials,
+    '/api/contacts': Contacts
 }
