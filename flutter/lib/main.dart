@@ -32,7 +32,7 @@ class App extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Ухаживать легко',
+        title: 'Забота',
         home: MainScreen(),
         theme: _theme(context),
         debugShowCheckedModeBanner: false,

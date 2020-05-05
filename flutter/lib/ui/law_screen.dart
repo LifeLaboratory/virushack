@@ -8,6 +8,6 @@ class LawScreen extends StatefulWidget {
 class _LawScreenState extends State<LawScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    //return Scaffold(appBar: AppBar(title: ),);
   }
 }

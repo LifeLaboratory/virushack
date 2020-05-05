@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:adhara_socket_io/socket.dart';
 import 'package:http/http.dart' as http;
-import 'package:palliative_chat/config/settings.dart';
 import 'package:palliative_chat/util/log.dart';
 import 'package:web_socket_channel/io.dart';
 
-import 'models/message.dart';
+import 'models/article.dart';
 
 class HttpStatus {
   static const ok = 200;
@@ -17,6 +17,11 @@ class HttpStatus {
 
 enum CallType { get, post, delete, put, patch }
 
+const testHash1 = 'c4ca4238a0b923820dcc509a6f75849b';
+const testHash2 = 'c81e728d9d4c2f636f067f89cc14862c';
+const testHash3 = 'eccbc87e4b5ce2fe28308fd9f2a7baf3';
+const testUserId1 = 1;
+
 class Api {
   //
   static final Api _singleton = Api._internal();
@@ -25,30 +30,14 @@ class Api {
 
   //
   http.Client _client = http.Client();
-  var _messagesController = StreamController<Message>.broadcast();
+  var _chatController = StreamController<dynamic>.broadcast();
   StreamSubscription _websocketSubscription;
-  var _deviceId = '';
+  var _deviceId = testHash1;
+  var _userId = 1;
   IOWebSocketChannel _websocketChannel;
+  SocketIO _socket;
 
-  /*Stream<WebsocketData> get positions => _positionsController.stream;
-
-  Stream<WebsocketData> get margins => _marginsController.stream;
-
-  Stream<WebsocketData> get orderbook => _orderbookController.stream;
-
-  Stream<WebsocketData> get ticker => _tickerController.stream;
-
-  Stream<WebsocketData> get matches => _matchesController.stream;*/
-  authToWebsocket() async {
-    //payload:
-    //{
-    //“room_id”: int, “device_id”: str }
-
-    _websocketChannel.sink.add(jsonEncode({
-      //_type: 'auth',
-      //_token: token,
-    }));
-  }
+  Stream<dynamic> get chatData => _chatController.stream;
 
   joinRoom(int roomId) {
     _websocketChannel.sink.add(jsonEncode({
@@ -81,32 +70,100 @@ class Api {
     }));
   }
 
+  /*getRooms() {
+    l('getRooms', '$_websocketChannel');
+
+    _websocketChannel.sink.add(jsonEncode({
+      'event': 'get_history',
+      'payload': {
+        'full': true,
+      },
+    }));
+  }*/
+
   setDeviceId(String deviceId) {
     _deviceId = deviceId;
+  }
+
+  Future sendSurveyResult({
+    bool eat,
+    bool dysphagia,
+    bool washTeeth,
+    bool wash,
+    bool dress,
+    bool restroom,
+  }) async {
+    return _post('survey', params: {
+      "eat": eat,
+      "dysphagia": dysphagia,
+      "wash_teeth": washTeeth,
+      "wash": wash,
+      "dress": dress,
+      "restroom": restroom,
+      "id_user": _userId,
+    });
+  }
+
+  Future<List<Article>> getArticlesForUser(int userId) async {
+    final response =
+        await http.get('http://90.189.183.166:13451/api/materials?id_user=1');
+    final list = response.body as List;
+
+    l('getArticlesForUser', response.body);
+    //return list.map((e) => null);
   }
 
   //
   Api._internal() {
     l('_internal');
-    _initWebSocket();
-    authToWebsocket();
+    //_initWebSocket();
   }
 
   _initWebSocket() {
     l('_initWebSocket');
     // [_initWebsocket] can be called from a few places, so we need to make
     // sure to cancel the previous subscription before making a new one
+
     if (_websocketSubscription != null) {
       _websocketSubscription.cancel();
     }
 
+    l('_initWebSocket', 1);
     // connect
-    _websocketChannel = IOWebSocketChannel.connect(_feedUrl());
+
+    /*_websocketChannel = IOWebSocketChannel.connect(
+      'ws://90.189.183.166:15446',
+      protocols: ['websocket'],
+    );*/
+
+    /* SocketIOManager manager = SocketIOManager();
+    manager
+        .createInstance(SocketOptions('http://90.189.183.166:5000'))
+        .then((socket) {
+      _socket = socket;
+
+      _socket.onConnect((data) {
+        print("connected...");
+        print(data);
+        socket.emit("message", ["Hello world!"]);
+      });
+
+      _socket.on("news", (data) {
+        print("news");
+        print(data);
+      });
+
+      _socket.connect();
+    });*/
+
+    l('_initWebSocket', 'opened', _websocketChannel.closeCode == null);
+
+    l('_initWebSocket', 2);
 
     _websocketSubscription = _websocketChannel.stream.listen((data) {
-      l('_initWebSocket', data);
-      final message = Message.fromJson(jsonDecode(data));
-      _messagesController.add(message);
+      l('_initWebSocket', 'received data', data);
+      //final message = Message.fromJson(jsonDecode(data));
+      _chatController.add(data);
     });
   }
 
@@ -182,7 +239,7 @@ class Api {
     String token,
   }) async {
     http.Response response;
-    var headers = await _headers(token: token);
+    var headers = await _headers();
     if (params != null) {
       params.removeWhere((key, value) => value == null);
     }
@@ -192,7 +249,7 @@ class Api {
           response = await _client.get(
             Uri.https(
               _apiHost(),
-              '/v1/$endpoint',
+              '/api/$endpoint',
               params,
             ),
             headers: headers,
@@ -200,7 +257,7 @@ class Api {
           break;
         case CallType.post:
           response = await _client.post(
-            Uri.https(_apiHost(), '/v1/$endpoint'),
+            Uri.https(_apiHost(), '/api/$endpoint'),
             headers: headers,
             body: json.encode(params),
           );
@@ -208,7 +265,7 @@ class Api {
         case CallType.delete:
           final request = http.Request(
             'DELETE',
-            Uri.https(_apiHost(), '/v1/$endpoint'),
+            Uri.https(_apiHost(), '/api/$endpoint'),
           );
           request.body = json.encode(params);
           request.headers.addAll(headers);
@@ -218,7 +275,7 @@ class Api {
         case CallType.put:
           final request = http.Request(
             'PUT',
-            Uri.https(_apiHost(), '/v1/$endpoint'),
+            Uri.https(_apiHost(), '/api/$endpoint'),
           );
           request.body = json.encode(params);
           request.headers.addAll(headers);
@@ -228,7 +285,7 @@ class Api {
         case CallType.patch:
           final request = http.Request(
             'PATCH',
-            Uri.https(_apiHost(), '/v1/$endpoint'),
+            Uri.https(_apiHost(), '/api/$endpoint'),
           );
           request.body = json.encode(params);
           request.headers.addAll(headers);
@@ -259,29 +316,16 @@ class Api {
     }
   }
 
-  Future<Map<String, String>> _headers({String token}) async {
+  Future<Map<String, String>> _headers() async {
     var headers = Map<String, String>()
       ..['Accept'] = 'application/json'
       ..['Content-Type'] = 'application/json';
-
-    // Some api requests required special token with other session level
-    // if we was provided with the token - used it
-    // if not - try to get token with level 'loggedIn' form the settings
-    if (token == null) {
-      token = await Settings().getTokenLoggedIn();
-    }
-    // Maybe we have no any token at all - this is ok
-    if (token != null && token.isNotEmpty) {
-      headers = headers..['Authorization'] = 'Bearer $token';
-    }
     return headers;
   }
 
-  String _feedUrl() {
-    return '90.189.183.166:15446';
-  }
-
   String _apiHost() {
-    return '90.189.183.166';
+    return '90.189.183.166:13451';
   }
 }
+
+Api api = Api();

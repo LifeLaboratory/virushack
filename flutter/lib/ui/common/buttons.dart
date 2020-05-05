@@ -3,8 +3,8 @@ import 'package:palliative_chat/config/constants.dart';
 
 import 'texts.dart';
 
-const _defaultTextColor = Colors.white;
-const _defaultTextDisabledColor = Colors.white54;
+const _defaultTextColor = Colors.black;
+const _defaultTextDisabledColor = Colors.black;
 const _defaultTextSize = AppSize.fontSmall;
 const _defaultButtonHeight = AppSize.buttonHeight;
 const _defaultFontWeight = FontWeight.bold;

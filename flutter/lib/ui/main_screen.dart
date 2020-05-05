@@ -83,7 +83,7 @@ class _MainScreenState extends State<MainScreen> {
         child: Row(
           children: [
             _navigationBarItem(
-              'Чат',
+              'Вы не одни',
               Icons.chat_bubble_outline,
               AppImages.iconNavbarHomeOn,
               ScreenIndices.chat,

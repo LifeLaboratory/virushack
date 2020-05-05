@@ -1,18 +1,14 @@
-import 'package:json_annotation/json_annotation.dart';
-import 'package:palliative_chat/repository/models/message.dart';
-
-part 'room.g.dart';
-
-@JsonSerializable()
 class Room {
+  //
   int roomId;
   String title;
-  List<Message> messages;
 
   //
-  factory Room.fromJson(Map<String, dynamic> json) => _$RoomFromJson(json);
+  factory Room.fromJson(Map<String, dynamic> json) => Room()
+    ..roomId = json['id_room'] as int
+    ..title = json['title'] as String;
 
-  Map<String, dynamic> toJson() => _$RoomToJson(this);
+  Map<String, dynamic> toJson() => null;
 
   Room();
 }

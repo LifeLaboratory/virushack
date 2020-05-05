@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -14,7 +15,7 @@ import 'package:palliative_chat/ui/common/placeholder.dart';
 import 'package:palliative_chat/ui/common/texts.dart';
 import 'package:palliative_chat/util/log.dart';
 
-const photoUrl = 'https://randomuser.me/api/portraits/women/8.jpg';
+//const photoUrl = 'https://randomuser.me/api/portraits/women/8.jpg';
 
 class RoomScreen extends StatefulBaseScreen {
   ///
@@ -211,7 +212,7 @@ class MessageItem extends StatelessWidget {
   Widget build(BuildContext context) {
     //L.i("build");
 
-    final isMine = true;
+    final isMine = false;
 
     return Padding(
       padding: AppPadding.exceptBottomNormal,
@@ -220,52 +221,54 @@ class MessageItem extends StatelessWidget {
         mainAxisAlignment:
             isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
-          if (isMine == null)
+          if (!isMine)
             _userIcon(
-              photoUrl /*message.photoUrl*/,
+              _photoUrl(),
               right: false,
             ),
-          Container(
-            constraints: BoxConstraints(
-              maxWidth: 240.0,
-              minWidth: 0.0,
-              maxHeight: double.infinity,
-              minHeight: 0.0,
+          Expanded(
+            child: Container(
+              constraints: BoxConstraints(
+                //maxWidth: 240.0,
+                minWidth: 0.0,
+                maxHeight: double.infinity,
+                minHeight: 0.0,
+              ),
+              decoration: _decoration(),
+              child: message.text.length > 10
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: AppPadding.exceptBottomMedium,
+                          child: Texts.black(message.text),
+                        ),
+                        Padding(
+                          padding: AppPadding.allMicro,
+                          child: _stateAndTime(message),
+                        ),
+                      ],
+                    )
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: AppPadding.allMedium,
+                          child: Texts.black(message.text),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(2.0),
+                          child: _stateAndTime(message),
+                        ),
+                      ],
+                    ),
             ),
-            decoration: _decoration(),
-            child: message.text.length > 10
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: AppPadding.exceptBottomMedium,
-                        child: Texts.black(message.text),
-                      ),
-                      Padding(
-                        padding: AppPadding.allMicro,
-                        child: _stateAndTime(message),
-                      ),
-                    ],
-                  )
-                : Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: AppPadding.allMedium,
-                        child: Texts.black(message.text),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(2.0),
-                        child: _stateAndTime(message),
-                      ),
-                    ],
-                  ),
           ),
-          if (isMine != null)
+          if (isMine)
             _userIcon(
-              photoUrl,
+              _photoUrl(),
               right: true,
             ),
         ],
@@ -273,7 +276,7 @@ class MessageItem extends StatelessWidget {
     );
   }
 
-  ///
+  //
   _userIcon(String photoUrl, {bool right}) {
     return Padding(
       padding: right ? AppPadding.leftSmall : AppPadding.rightSmall,
@@ -336,6 +339,11 @@ class MessageItem extends StatelessWidget {
         ),
       ],
     );*/
+  }
+
+  _photoUrl() {
+    final number = Random().nextInt(90) + 1;
+    return 'https://randomuser.me/api/portraits/women/$number.jpg';
   }
 }
 

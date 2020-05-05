@@ -1,19 +1,21 @@
-part 'message.g.dart';
-
 class Message {
   int messageId;
   String text;
-  int senderId;
-  int senderName;
+  int userId;
+  int roomId;
+  int parentChatId;
+  int createdAt;
 
   //
   factory Message.fromJson(Map<String, dynamic> json) => Message()
-    ..messageId = json['messageId'] as int
-    ..text = json['text'] as String
-    ..senderId = json['senderId'] as int
-    ..senderName = json['senderName'] as int;
+    ..messageId = json['id_message'] as int
+    ..text = json['text_message'] as String
+    ..userId = json['id_user'] as int
+    ..roomId = json['id_room'] as int
+    ..parentChatId = json['id_parent_chat'] as int
+    ..createdAt = json['created_at'] as int;
 
-  Map<String, dynamic> toJson() => _$MessageToJson(this);
+  Map<String, dynamic> toJson() => null;
 
   Message();
 }
