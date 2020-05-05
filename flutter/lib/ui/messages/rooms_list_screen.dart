@@ -1,10 +1,14 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:palliative_chat/blocs/chat/bloc.dart';
 import 'package:palliative_chat/config/constants.dart';
 import 'package:palliative_chat/repository/models/room.dart';
 import 'package:palliative_chat/ui/common/base_screen.dart';
+import 'package:palliative_chat/ui/common/my_divider.dart';
 import 'package:palliative_chat/ui/common/placeholder.dart';
 import 'package:palliative_chat/ui/common/texts.dart';
 import 'package:palliative_chat/util/log.dart';
@@ -20,7 +24,6 @@ class RoomsListScreen extends StatefulBaseScreen {
 
 class _RoomsListState extends BaseState<RoomsListScreen> {
   //
-  //int _selectedRoomId;
   Room _selectedRoom;
 
   //
@@ -31,13 +34,15 @@ class _RoomsListState extends BaseState<RoomsListScreen> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(
+            title: Texts.appBarTitle(
               _selectedRoom == null ? 'Общение' : _selectedRoom.title,
             ),
             leading: _selectedRoom != null
                 ? IconButton(
                     icon: Icon(Icons.arrow_back),
                     onPressed: () {
+                      sendEvent<ChatBloc>(
+                          context, LeaveRoom(_selectedRoom.roomId));
                       setState(() => _selectedRoom = null);
                     },
                   )
@@ -82,8 +87,9 @@ class _RoomsListState extends BaseState<RoomsListScreen> {
       );
     }
 
-    return ListView.builder(
+    return ListView.separated(
       padding: AppPadding.allZero,
+      separatorBuilder: (c, i) => MyDivider.horizontalTen(),
       itemBuilder: (context, index) {
         var room = state.rooms[index];
         return RoomItem(
@@ -100,79 +106,81 @@ class _RoomsListState extends BaseState<RoomsListScreen> {
 }
 
 class RoomItem extends StatelessWidget {
-  ///
+  //
   static var todayTimeFormat = DateFormat("hh:mm a");
   static var generalDateFormat = DateFormat("dd MMM");
   static const unreadMessagesIndicatorSize = 20.0;
 
-  ///
+  //
   final Room room;
   final Function() onPressed;
 
-  ///
+  //
   const RoomItem({
     this.room,
     this.onPressed,
   });
 
-  ///
+  //
   @override
   Widget build(BuildContext context) {
+    final newMessages = Random().nextInt(20);
+
     return Material(
       color: Colors.white,
       child: InkWell(
         onTap: onPressed,
-        child: Row(
-          children: [
-            new Padding(
-              padding: AppPadding.allNormal,
-              child: CircleAvatar(
-                backgroundColor: AppColors.greyLight,
-                radius: 10.0,
-                backgroundImage: NetworkImage(
-                  "http://via.placeholder.com/100x100",
+        child: Container(
+          height: 70.0,
+          alignment: Alignment.center,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: AppPadding.rightNormal,
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Texts.bold(room.title),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _lastMessageText(room),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-            ),
-            new Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Texts(room.title),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: AppPadding.rightMicro,
-                        child:
-                            Container() /*MessageUtil.stateIcon(
-                          room.lastMessageState,
-                          size: 20.0,
-                        )*/
-                        ,
-                      ),
-                      Expanded(
-                        child: _lastMessageText(room),
-                      ),
-                    ],
+              if (newMessages > 0)
+                Padding(
+                  padding: AppPadding.rightNormal,
+                  child: Container(
+                    padding: AppPadding.horizontalMicro,
+                    alignment: Alignment.center,
+                    height: 16.0,
+                    constraints: BoxConstraints(
+                      minWidth: 16.0,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.green[700],
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Texts(
+                      newMessages.toString(),
+                      textSize: 10.0,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ],
-              ),
-            ),
-            /*Padding(
-              padding: AppPadding.rightNormal,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Texts.secondaryBlackSmall(
-                    _getTimeString(room.lastMessageTime),
-                  ),
-                  _unreadMessagesIndicator(
-                    room.unreadMessagesCount,
-                  )
-                ],
-              ),
-            )*/
-          ],
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -216,7 +224,9 @@ class RoomItem extends StatelessWidget {
 
   Widget _lastMessageText(Room room) {
     return Texts.secondaryBlack(
-      room.messages.last.text,
+      '',
+
+      ///room.messages?.last?.text ?? '',
       overflow: TextOverflow.ellipsis,
     );
   }

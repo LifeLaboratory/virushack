@@ -225,7 +225,7 @@ class AppSize {
   static const paddingBigExtra = 30.0;
   static const paddingHuge = 36.0;
 
-  static const buttonHeight = 35.0;
+  static const buttonHeight = 40.0;
   static const buttonHeightSmall = 32.0;
   static const buttonWidth = 180.0;
 }

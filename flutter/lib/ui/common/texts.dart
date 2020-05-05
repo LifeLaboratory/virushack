@@ -60,6 +60,13 @@ class Texts extends StatelessWidget {
           fontWeight: fontWeight,
         );
 
+  const Texts.appBarTitle(String text)
+      : this(
+          text,
+          textSize: AppSize.fontMedium,
+          fontWeight: FontWeight.w600,
+        );
+
   const Texts.smallVery(
     String text, {
     FontWeight fontWeight,
@@ -144,6 +151,7 @@ class Texts extends StatelessWidget {
           fontWeight: FontWeight.bold,
           textSize: textSize,
         );
+
   const Texts.black(
     String text, {
     double textSize,
@@ -231,6 +239,12 @@ class Texts extends StatelessWidget {
           color: color,
           textSize: AppSize.fontNormal,
           fontWeight: fontWeight,
+        );
+  const Texts.normalSemiBold(String text)
+      : this(
+          text,
+          textSize: AppSize.fontNormal,
+          fontWeight: FontWeight.w600,
         );
 
   const Texts.redSmallBold(text)
@@ -497,7 +511,7 @@ class Texts extends StatelessWidget {
       fontWeight: fontWeight ?? _defaultFontWeight,
       height: height,
       letterSpacing: letterSpacing,
-      fontFamily: 'NunitoSans',
+      fontFamily: 'OpenSans',
     );
 
     if (isLink) {
@@ -527,7 +541,7 @@ class Texts extends StatelessWidget {
                     fontWeight:
                         data.fontWeight ?? fontWeight ?? _defaultFontWeight,
                     fontSize: this.textSize ?? _defaultTextSize,
-                    fontFamily: 'NunitoSans',
+                    fontFamily: 'OpenSans',
                   ),
                 ),
               )

@@ -30,6 +30,9 @@ dependencies:
   package_info: any
   http: any
   device_info: any
+  # flutter_socket_io: 0.6.0
+  # socket_io_client: 0.9.9
+  adhara_socket_io: any
 
 dev_dependencies:
   flutter_test:
@@ -55,4 +58,16 @@ flutter:
         - asset: assets/fonts/NunitoSans-Bold.ttf
           weight: 700
         - asset: assets/fonts/NunitoSans-ExtraBold.ttf
+          weight: 800
+    - family: OpenSans
+      fonts:
+        - asset: assets/fonts/OpenSans-Regular.ttf
+          weight: 500
+        - asset: assets/fonts/OpenSans-Light.ttf
+          weight: 300
+        - asset: assets/fonts/OpenSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/OpenSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/OpenSans-ExtraBold.ttf
           weight: 800
