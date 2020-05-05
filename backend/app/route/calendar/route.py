@@ -22,3 +22,6 @@ class Calendar(BaseRouter):
         self._read_args()
         answer = post_calendar(self.data)
         return answer, 200, names.CORS_HEADERS
+
+    def options(self):
+        return 'Ok', 200, names.CORS_HEADERS

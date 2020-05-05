@@ -1,3 +1,8 @@
+import os
+import sys
+sys.path.append(os.getcwd()+'/../')
+sys.path.append(os.getcwd()+'../')
+sys.path.append(os.getcwd())
 from aiohttp import web
 from chat import app
 from chat.events.alert import *

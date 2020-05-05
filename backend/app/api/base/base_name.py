@@ -55,6 +55,7 @@ EXPIRED_START = 'expired_start'
 EXPIRED_END = 'expired_end'
 NAME = "name"
 SEARCH = 'search'
+PICTURE_URL = 'picture_url'
 LAW_MATERIALS = 'law_materials'
 SURNAME = "surname"
 EMAIL = "email"
