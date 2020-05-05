@@ -68,8 +68,7 @@ where id_user = {id_user}
         :return:
         """
         query = """
-select r.* from  user_room ur
-left join rooms r on r.id_room = ur.id_room
+select r.* from  rooms r
 """
         return Sql.exec(query=query, args=args)
 
@@ -158,5 +157,17 @@ values ('{text_message}',
         {id_room},
         now()::timestamp
         )
+"""
+        return Sql.exec(query=query, args=args)
+
+    @staticmethod
+    def get_users_by_room(args):
+        """
+        Получить пользователей комнаты
+        :param args:
+        :return:
+        """
+        query = """
+select distinct id_user from user_room where id_room = 1
 """
         return Sql.exec(query=query, args=args)
